@@ -1,3 +1,42 @@
+project "RTXMU"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++latest"
+	staticruntime "on"
+
+	targetdir("%{wks.location}/Build/Binary/"..output_dir.."/%{prj.name}");
+	objdir("%{wks.location}/Build/Intermediate/"..output_dir.."/%{prj.name}");
+
+	files {
+		"rtxmu/**.h",
+		"rtxmu/**.cpp"
+	}
+
+	defines {
+		"NOMINMAX"
+	}
+
+	--VULKAN_SDK = os.getenv("VULKAN_SDK")
+
+	includedirs {
+		"rtxmu/include",
+		--"%{VULKAN_SDK}/Include",
+		"thirdparty/Vulkan-Headers/include"
+	}
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "speed"
+
+    filter "configurations:Dist"
+		runtime "Release"
+		optimize "speed"
+        symbols "off"
+
 project "NVRHI-Vulkan"
 	kind "StaticLib"
 	language "C++"
@@ -19,14 +58,15 @@ project "NVRHI-Vulkan"
 		"NOMINMAX"
 	}
 
-	VULKAN_SDK = os.getenv("VULKAN_SDK")
+	--VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 	includedirs {
 		"include",
 
 		"rtxmu/include",
 
-		"%{VULKAN_SDK}/Include",
+		"thirdparty/Vulkan-Headers/include"
+		--"%{VULKAN_SDK}/Include",
 	}
 
 	filter "configurations:Debug"
@@ -144,8 +184,8 @@ project "NVRHI"
 		"include/nvrhi/nvrhi.h",
 		"include/nvrhi/utils.h",
 
-		"include/nvrhi/common/**.h",
-		"src/nvrhi/common/**.cpp",
+		"include/common/**.h",
+		"src/common/**.cpp",
 
 		"src/validation/**.h",
 		"src/validation/**.cpp",
@@ -159,6 +199,7 @@ project "NVRHI"
 	}
 
 	links {
+		"RTXMU",
 		"NVRHI-Vulkan",
 		"NVRHI-D3D11",
 		"NVRHI-D3D12"
