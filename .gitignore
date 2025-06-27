@@ -1,3 +1,12 @@
 build*/
 .vscode/
 nvapi/
+/NVRHI-D3D11.vcxproj
+/NVRHI-D3D11.vcxproj.filters
+/NVRHI-D3D12.vcxproj
+/NVRHI-D3D12.vcxproj.filters
+/NVRHI-Vulkan.vcxproj
+/NVRHI-Vulkan.vcxproj.filters
+/NVRHI.vcxproj
+/NVRHI.vcxproj.filters
+/NVRHI.vcxproj.user
