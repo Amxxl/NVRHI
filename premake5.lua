@@ -16,12 +16,12 @@ project "RTXMU"
 		"NOMINMAX"
 	}
 
-	--VULKAN_SDK = os.getenv("VULKAN_SDK")
+	VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 	includedirs {
 		"rtxmu/include",
-		--"%{VULKAN_SDK}/Include",
-		"thirdparty/Vulkan-Headers/include"
+		"%{VULKAN_SDK}/Include",
+		--"thirdparty/Vulkan-Headers/include"
 	}
 
 	filter "configurations:Debug"
@@ -58,15 +58,15 @@ project "NVRHI-Vulkan"
 		"NOMINMAX"
 	}
 
-	--VULKAN_SDK = os.getenv("VULKAN_SDK")
+	VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 	includedirs {
 		"include",
 
 		"rtxmu/include",
 
-		"thirdparty/Vulkan-Headers/include"
-		--"%{VULKAN_SDK}/Include",
+		--"thirdparty/Vulkan-Headers/include"
+		"%{VULKAN_SDK}/Include",
 	}
 
 	filter "configurations:Debug"
