@@ -1036,6 +1036,27 @@ namespace nvrhi::d3d12
         }
     }
 
+    // @info: added.
+    static bool AreLayoutsCompatible(BindingLayoutHandle first, const IBindingLayout* second)
+    {
+        if (!first || !second)
+            return false;
+
+        const auto& descA = first->getDesc();
+        const auto& descB = second->getDesc();
+
+        if (descA->bindings.size() != descB->bindings.size())
+            return false;
+
+        for (size_t i = 0; i < descA->bindings.size(); ++i)
+        {
+            if (descA->bindings[i] != descB->bindings[i])
+                return false;
+        }
+
+        return true;
+    }
+
     void CommandList::setGraphicsBindings(
         const BindingSetVector& bindings, uint32_t bindingUpdateMask,
         IBuffer* indirectParams, bool updateIndirectParams,
@@ -1059,7 +1080,11 @@ namespace nvrhi::d3d12
 
                 if (_bindingSet->getDesc())
                 {
-                    assert(layoutAndOffset.first == _bindingSet->getLayout()); // validation layer handles this
+                    // @info: for reference:
+                    //assert(layoutAndOffset.first == _bindingSet->getLayout()); // validation layer handles this
+
+                    // Ensures that pipeline layout and the binding set layout are compatible in content, not necessarily the same memory address
+                    assert(AreLayoutsCompatible(layoutAndOffset.first, _bindingSet->getLayout())); // validation layer handles this
 
                     BindingSet* bindingSet = checked_cast<BindingSet*>(_bindingSet);
 
