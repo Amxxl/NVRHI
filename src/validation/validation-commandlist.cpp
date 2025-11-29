@@ -482,6 +482,26 @@ namespace nvrhi::validation
         m_CommandList->setSamplerFeedbackTextureState(texture, stateBits);
     }
 
+    static bool AreLayoutsCompatible(IBindingLayout* first, const IBindingLayout* second)
+    {
+        if (!first || !second)
+            return false;
+
+        const auto& descA = first->getDesc();
+        const auto& descB = second->getDesc();
+
+        if (descA->bindings.size() != descB->bindings.size())
+            return false;
+
+        for (size_t i = 0; i < descA->bindings.size(); ++i)
+        {
+            if (descA->bindings[i] != descB->bindings[i])
+                return false;
+        }
+
+        return true;
+    }
+
     bool CommandListWrapper::validateBindingSetsAgainstLayouts(const static_vector<BindingLayoutHandle, c_MaxBindingLayouts>& layouts, const static_vector<IBindingSet*, c_MaxBindingLayouts>& sets) const
     {
         if (layouts.size() != sets.size())
@@ -511,7 +531,7 @@ namespace nvrhi::validation
             bool setIsBindless = (sets[index]->getDesc() == nullptr);
             bool expectedBindless = expectedLayout->getBindlessDesc();
 
-            if (!expectedBindless && setLayout != expectedLayout)
+            if (!expectedBindless && !AreLayoutsCompatible(setLayout, expectedLayout))
             {
                 std::stringstream ss;
                 ss << "Binding set in slot " << index << " does not match the layout in pipeline slot " << index;
