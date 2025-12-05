@@ -155,8 +155,14 @@ namespace nvrhi::d3d11
             // we can map if it it's D3D11_USAGE_DYNAMIC, but not UpdateSubresource
             D3D11_MAPPED_SUBRESOURCE mappedData;
             D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
-            if (destOffsetBytes > 0 || dataSize + destOffsetBytes < buffer->desc.byteSize)
-                mapType = D3D11_MAP_WRITE;
+            //if (destOffsetBytes > 0 || dataSize + destOffsetBytes < buffer->desc.byteSize)
+            //    mapType = D3D11_MAP_WRITE;
+
+
+            // Only use WRITE_NO_OVERWRITE if we have a partial update
+            if (dataSize > 0 && (destOffsetBytes > 0 || dataSize + destOffsetBytes < buffer->desc.byteSize))
+                mapType = D3D11_MAP_WRITE_NO_OVERWRITE;  // safer than MAP_WRITE
+
 
             const HRESULT res = m_Context.immediateContext->Map(buffer->resource, 0, mapType, 0, &mappedData);
             if (FAILED(res))
