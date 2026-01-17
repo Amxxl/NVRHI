@@ -292,7 +292,8 @@ namespace nvrhi::d3d11
             UINT pVertexBufferOffsets[c_MaxVertexAttributes] = {};
             uint32_t maxVbIndex = 0;
 
-            const auto *inputLayout = pipeline->inputLayout;
+            auto *inputLayout = pipeline->inputLayout;
+
             for (size_t i = 0; i < state.vertexBuffers.size(); i++)
             {
                 const VertexBufferBinding& binding = state.vertexBuffers[i];
@@ -304,7 +305,7 @@ namespace nvrhi::d3d11
                 assert(binding.offset <= UINT_MAX);
 
                 pVertexBuffers[binding.slot] = checked_cast<Buffer*>(binding.buffer)->resource;
-                pVertexBufferStrides[binding.slot] = inputLayout->elementStrides.at(binding.slot);
+                pVertexBufferStrides[binding.slot] = inputLayout->elementStrides[binding.slot];
                 pVertexBufferOffsets[binding.slot] = UINT(binding.offset);
                 maxVbIndex = std::max(maxVbIndex, binding.slot);
             }
