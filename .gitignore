@@ -10,3 +10,5 @@ nvapi/
 /NVRHI.vcxproj
 /NVRHI.vcxproj.filters
 /NVRHI.vcxproj.user
+/RTXMU.vcxproj
+/RTXMU.vcxproj.filters
